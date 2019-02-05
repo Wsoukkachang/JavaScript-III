@@ -84,8 +84,41 @@ Humanoid.prototype.greet= function() {
   console.log(`${this.name} offers a greeting in ${this.language}.`);
 }
 
+function Villain(villainAttributes) {
+  // bind the this keyword to the Parent constructor
+  Humanoid.call(this, villainAttributes);
+  this.bombs = villainAttributes.bombs ;
+
+}
+
+Villain.prototype = Humanoid.prototype;
+
+//* Villain prototype methods ->
+Villain.prototype.stab= function() {
+  console.log(`${this.name} stabs ${Hero.name} with ${this.weapons}. ${Hero.name} loses 5 health points!`);
+  (Hero.healthPoints - 5);
+}
+
+Villain.prototype.laugh= function() {
+  console.log(`${this.name} throws a flash bomb at ${Hero.name}. ${Hero.name} gets blinded!`);
+}
+
+function Hero(heroAttributes) {
+  // bind the this keyword to the Parent constructor
+  Humanoid.call(this, heroAttributes);
+  this.potion = heroAttributes.potion;
+}
+
+Hero.prototype = Humanoid.prototype;
+
+//* Hero prototype methods ->
+Hero.prototype.recover= function() {
+  console.log(`${this.name} drinks potion! ${Hero.name} gains 10 health points!`);
+  (Hero.healthPoints + 10);
+}
 
 
+//---------------------------------//
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
