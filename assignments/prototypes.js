@@ -80,43 +80,9 @@ Humanoid.prototype = CharacterStats.prototype;
 // Must place new methods AFTER the Object.create();
 
 // * greet() prototype method -> returns the string '<object name> offers a greeting in <object language>.'
-Humanoid.prototype.greet= function() {
+Humanoid.prototype.greet = function() {
   console.log(`${this.name} offers a greeting in ${this.language}.`);
 }
-
-function Villain(villainAttributes) {
-  // bind the this keyword to the Parent constructor
-  Humanoid.call(this, villainAttributes);
-  this.bombs = villainAttributes.bombs ;
-
-}
-
-Villain.prototype = Humanoid.prototype;
-
-//* Villain prototype methods ->
-Villain.prototype.stab= function() {
-  console.log(`${this.name} stabs ${Hero.name} with ${this.weapons}. ${Hero.name} loses 5 health points!`);
-  (Hero.healthPoints - 5);
-}
-
-Villain.prototype.laugh= function() {
-  console.log(`${this.name} throws a flash bomb at ${Hero.name}. ${Hero.name} gets blinded!`);
-}
-
-function Hero(heroAttributes) {
-  // bind the this keyword to the Parent constructor
-  Humanoid.call(this, heroAttributes);
-  this.potion = heroAttributes.potion;
-}
-
-Hero.prototype = Humanoid.prototype;
-
-//* Hero prototype methods ->
-Hero.prototype.recover= function() {
-  console.log(`${this.name} drinks potion! ${Hero.name} gains 10 health points!`);
-  (Hero.healthPoints + 10);
-}
-
 
 //---------------------------------//
   const mage = new Humanoid({
@@ -185,3 +151,94 @@ Hero.prototype.recover= function() {
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+  function Villain(villainAttributes) {
+    // bind the this keyword to the Parent constructor
+    Humanoid.call(this, villainAttributes);
+    this.bomb = villainAttributes.bomb ;
+  }
+  
+  Villain.prototype = Humanoid.prototype;
+  
+  //* Villain prototype methods ->
+  Villain.prototype.stab = function(Hero) {
+    console.log(`${this.name} stabs ${Hero.name} with ${this.weapons}. ${Hero.name} loses 5 health points!`);
+    (Hero.healthPoints - 5);
+    console.log(`${Hero.name} has ${Hero.healthPoints} health points!`);
+  }
+  
+  Villain.prototype.bomb = function(Hero) {
+    if (this.bomb > 0) {
+      console.log(`${this.name} throws a flash bomb at ${Hero.name}. ${Hero.name} gets blinded!`);
+    }
+    else {
+      console.log(`${this.name} does not have any bombs!`);
+    }
+  }
+  
+  function Hero(heroAttributes) {
+    // bind the this keyword to the Parent constructor
+    Humanoid.call(this, heroAttributes);
+    this.potion = heroAttributes.potion;
+  }
+  
+  Hero.prototype = Humanoid.prototype;
+  
+  //* Hero prototype methods ->
+  Hero.prototype.recover = function() {
+    if (this.potion > 0) {
+      console.log(`${this.name} drinks potion! ${this.name} gains 10 health points!`);
+      (this.healthPoints + 10);
+    }
+    else {
+      console.log(`${this.name} does not have any potion!`);
+    }
+  }
+
+  Hero.prototype.slash = function(Villain) {
+    console.log(`${this.name} slash ${Villain.name} with ${this.weapons}. ${Villain.name} loses 7 health points!`);
+    (Villain.healthPoints - 7);
+    console.log(`${Villain.name} has ${Villain.healthPoints} health points!`);
+  }
+
+  const pirate = new Villain({
+    createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 4,
+    },
+    healthPoints: 10,
+    name: 'Jack Sparrow',
+    team: 'Buccaneers',
+    weapons: [
+      'Pick',
+      'Dagger',
+    ],
+    language: 'Old English',
+    bomb: 1,
+  });
+
+  const knight = new Hero({
+    createdAt: new Date(),
+    dimensions: {
+      length: 3,
+      width: 3,
+      height: 5,
+    },
+    healthPoints: 10,
+    name: 'Arthur',
+    team: 'Camelot',
+    weapons: [
+      'Sword',
+      'Shield',
+    ],
+    language: 'English',
+    potion: 1,
+  });
+
+  console.log(pirate.stab(knight)); //
+  console.log(knight.slash(pirate)); //
+  console.log(pirate.bomb(knight)); //
+  console.log(knight.recover(pirate)); //
+  
