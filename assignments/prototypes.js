@@ -146,6 +146,7 @@ Humanoid.prototype.greet = function() {
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 
+//---------------------------------------------
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
@@ -157,17 +158,27 @@ Humanoid.prototype.greet = function() {
     Humanoid.call(this, villainAttributes);
     this.bomb = villainAttributes.bomb ;
   }
-  
+
+  // We are recreating the Child prototype to now include Parent as well.
   Villain.prototype = Humanoid.prototype;
   
   //* Villain prototype methods ->
+
+  // * stab() prototype method -> villain damage function - reduces Hero HP by 5'
   Villain.prototype.stab = function(Hero) {
-    console.log(`${this.name} stabs ${Hero.name} with ${this.weapons}. ${Hero.name} loses 5 health points!`);
-    (Hero.healthPoints - 5);
-    console.log(`${Hero.name} has ${Hero.healthPoints} health points!`);
+    console.log(`${this.name} stabs ${Hero.name} with ${this.weapons[0]}. ${Hero.name} loses 5 health points!`);
+    (Hero.healthPoints -= 5);
+    if (Hero.healthPoints < 0){
+      console.log(`${Hero.name} has no more health points! WELL DONE! ${Hero.name} has been defeated!!!`);
+      Hero.destroy();
+    }
+    else {
+      console.log(`${Hero.name} has ${Hero.healthPoints} health points now!`);
+    }
   }
   
-  Villain.prototype.bomb = function(Hero) {
+  // * throw() prototype method -> villain function - blinds opponent'
+  Villain.prototype.throw = function(Hero) {
     if (this.bomb > 0) {
       console.log(`${this.name} throws a flash bomb at ${Hero.name}. ${Hero.name} gets blinded!`);
     }
@@ -182,24 +193,37 @@ Humanoid.prototype.greet = function() {
     this.potion = heroAttributes.potion;
   }
   
+  // We are recreating the Child prototype to now include Parent as well.
   Hero.prototype = Humanoid.prototype;
   
-  //* Hero prototype methods ->
+//* Hero prototype methods ->
+
+// * recover() prototype method -> hero function - recovers Hero HP by 10
   Hero.prototype.recover = function() {
     if (this.potion > 0) {
       console.log(`${this.name} drinks potion! ${this.name} gains 10 health points!`);
-      (this.healthPoints + 10);
+      (this.healthPoints += 10);
+      console.log(`${this.name} has ${this.healthPoints} health points now!`);
     }
     else {
       console.log(`${this.name} does not have any potion!`);
     }
   }
 
+  // * slash() prototype method -> hero damage function - reduces Villain HP by 7
   Hero.prototype.slash = function(Villain) {
-    console.log(`${this.name} slash ${Villain.name} with ${this.weapons}. ${Villain.name} loses 7 health points!`);
-    (Villain.healthPoints - 7);
-    console.log(`${Villain.name} has ${Villain.healthPoints} health points!`);
+    console.log(`${this.name} slash ${Villain.name} with ${this.weapons[0]}. ${Villain.name} loses 7 health points!`);
+    (Villain.healthPoints -= 7);
+    if (Villain.healthPoints < 0) {
+      console.log(`${Villain.name} has no more health points! WELL DONE! ${Villain.name} has been defeated!!!`);
+      Villain.destroy();
+    }
+    else {
+      console.log(`${Villain.name} has ${Villain.healthPoints} health points now!`);
+    }
   }
+
+// Villain and Hero Objects
 
   const pirate = new Villain({
     createdAt: new Date(),
@@ -208,11 +232,11 @@ Humanoid.prototype.greet = function() {
       width: 2,
       height: 4,
     },
-    healthPoints: 10,
-    name: 'Jack Sparrow',
+    healthPoints: 8,
+    name: 'Blackbeard',
     team: 'Buccaneers',
     weapons: [
-      'Pick',
+      'Saber',
       'Dagger',
     ],
     language: 'Old English',
@@ -226,8 +250,8 @@ Humanoid.prototype.greet = function() {
       width: 3,
       height: 5,
     },
-    healthPoints: 10,
-    name: 'Arthur',
+    healthPoints: 8,
+    name: 'King Arthur',
     team: 'Camelot',
     weapons: [
       'Sword',
@@ -237,8 +261,15 @@ Humanoid.prototype.greet = function() {
     potion: 1,
   });
 
-  console.log(pirate.stab(knight)); //
-  console.log(knight.slash(pirate)); //
-  console.log(pirate.bomb(knight)); //
-  console.log(knight.recover(pirate)); //
+  // Hero wins ----
+  // console.log(pirate.stab(knight)); // Damage - loses 5 HP
+  // console.log(knight.slash(pirate)); // Damage - loses 7 HP
+  // console.log(knight.recover(pirate)); // Recover 10 HP
+  // console.log(knight.slash(pirate)); // Pirate HP reaches below 0.
+  
+  //Villain wins ---
+  // console.log(pirate.stab(knight)); // Damage - loses 5 HP
+  // console.log(knight.slash(pirate)); // Damage - loses 7 HP
+  // console.log(pirate.throw(knight)); // Blinds opponent
+  // console.log(pirate.stab(knight)); // Hero HP reaches below 0.
   
