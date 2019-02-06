@@ -49,7 +49,7 @@ function GameObject(attributes) {
 
 // * destroy() prototype method that returns: '{this.name} was removed
 GameObject.prototype.destroy = function() {
-  console.log(`${this.name} was removed from the game.`);
+  return `${this.name} was removed from the game.`;
 }
 
 function CharacterStats(childAttributes) {
@@ -59,11 +59,11 @@ function CharacterStats(childAttributes) {
 }
 
 // We are recreating the Child prototype to now include Parent as well.
-CharacterStats.prototype = GameObject.prototype;
+CharacterStats.prototype = Object.create(GameObject.prototype);
 
 // * takeDamage() prototype method -> returns the string '<object name> took damage.'
 CharacterStats.prototype.takeDamage = function() {
-  console.log(`${this.name} took damage.`);
+  return `${this.name} took damage.`;
 }
 
 function Humanoid(gChildAttributes) {
@@ -75,13 +75,13 @@ function Humanoid(gChildAttributes) {
 }
 
 // We are recreating the Child prototype to now include Parent as well.
-Humanoid.prototype = CharacterStats.prototype;
+Humanoid.prototype = Object.create(CharacterStats.prototype);
 
 // Must place new methods AFTER the Object.create();
 
 // * greet() prototype method -> returns the string '<object name> offers a greeting in <object language>.'
 Humanoid.prototype.greet = function() {
-  console.log(`${this.name} offers a greeting in ${this.language}.`);
+  return `${this.name} offers a greeting in ${this.language}.`;
 }
 
 //---------------------------------//
@@ -160,7 +160,7 @@ Humanoid.prototype.greet = function() {
   }
 
   // We are recreating the Child prototype to now include Parent as well.
-  Villain.prototype = Humanoid.prototype;
+  Villain.prototype = Object.create(Humanoid.prototype);
   
   //* Villain prototype methods ->
 
@@ -168,22 +168,22 @@ Humanoid.prototype.greet = function() {
   Villain.prototype.stab = function(Hero) {
     console.log(`${this.name} stabs ${Hero.name} with ${this.weapons[0]}. ${Hero.name} loses 5 health points!`);
     (Hero.healthPoints -= 5);
-    if (Hero.healthPoints < 0){
+    if (Hero.healthPoints < 0) {
       console.log(`${Hero.name} has no more health points! WELL DONE! ${Hero.name} has been defeated!!!`);
-      Hero.destroy();
+      return Hero.destroy();
     }
     else {
-      console.log(`${Hero.name} has ${Hero.healthPoints} health points now!`);
+      return `${Hero.name} has ${Hero.healthPoints} health points now!`;
     }
   }
   
   // * throw() prototype method -> villain function - blinds opponent'
   Villain.prototype.throw = function(Hero) {
     if (this.bomb > 0) {
-      console.log(`${this.name} throws a flash bomb at ${Hero.name}. ${Hero.name} gets blinded!`);
+      return `${this.name} throws a flash bomb at ${Hero.name}. ${Hero.name} gets blinded!`;
     }
     else {
-      console.log(`${this.name} does not have any bombs!`);
+      return `${this.name} does not have any bombs!`;
     }
   }
   
@@ -194,7 +194,7 @@ Humanoid.prototype.greet = function() {
   }
   
   // We are recreating the Child prototype to now include Parent as well.
-  Hero.prototype = Humanoid.prototype;
+  Hero.prototype = Object.create(Humanoid.prototype);
   
 //* Hero prototype methods ->
 
@@ -203,10 +203,10 @@ Humanoid.prototype.greet = function() {
     if (this.potion > 0) {
       console.log(`${this.name} drinks potion! ${this.name} gains 10 health points!`);
       (this.healthPoints += 10);
-      console.log(`${this.name} has ${this.healthPoints} health points now!`);
+      return `${this.name} has ${this.healthPoints} health points now!`;
     }
     else {
-      console.log(`${this.name} does not have any potion!`);
+      return `${this.name} does not have any potion!`;
     }
   }
 
@@ -216,10 +216,10 @@ Humanoid.prototype.greet = function() {
     (Villain.healthPoints -= 7);
     if (Villain.healthPoints < 0) {
       console.log(`${Villain.name} has no more health points! WELL DONE! ${Villain.name} has been defeated!!!`);
-      Villain.destroy();
+      return Villain.destroy();
     }
     else {
-      console.log(`${Villain.name} has ${Villain.healthPoints} health points now!`);
+      return `${Villain.name} has ${Villain.healthPoints} health points now!`;
     }
   }
 
